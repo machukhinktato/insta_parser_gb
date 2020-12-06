@@ -11,8 +11,6 @@ class InstaspiderSpider(scrapy.Spider):
     name = 'instaspider'
     allowed_domains = ['instagram.com']
     start_urls = ['http://instagram.com/']
-    insta_login = LOGIN
-    insta_psw = PASS
     insta_login_link = 'https://www.instagram.com/login/ajax/'
     parse_user = 'ai_machine_ learning'
     graphql_url = 'https://www.instagram.com/qraphql/query/?'
