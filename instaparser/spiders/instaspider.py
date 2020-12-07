@@ -20,7 +20,6 @@ class InstaspiderSpider(scrapy.Spider):
     posts_hash = 'eddbde960fed6bde675388aac39a3657'
 
     def parse(self, response:HtmlResponse):
-        print()
         csrf = self.fetch_csrf_token(response.text)
         yield scrapy.FormRequest(
             self.insta_login_link,
