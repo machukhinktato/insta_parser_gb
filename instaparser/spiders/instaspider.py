@@ -10,8 +10,10 @@ from .VARIABLES import *
 class InstaspiderSpider(scrapy.Spider):
     name = 'instaspider'
     allowed_domains = ['instagram.com']
-    start_urls = ['http://instagram.com/']
+    start_urls = ['https://www.instagram.com/']
     insta_login_link = 'https://www.instagram.com/login/ajax/'
+    insta_login = LOGIN
+    insta_pass = PASS
     parse_user = 'ai_machine_ learning'
     graphql_url = 'https://www.instagram.com/qraphql/query/?'
     posts_hash = 'eddbde960fed6bde675388aac39a3657'
@@ -22,8 +24,9 @@ class InstaspiderSpider(scrapy.Spider):
             method='POST',
             callback=self.auth,
             formdata={
-                'username': LOGIN,
-                'enc_password': PASS,
+                'username': self.insta_login,
+                'enc_password': '#PWD_INSTAGRAM_BROWSER:10:1607363859:AXZQAKe4+LkKk5ihE5V9+LJiHaZiyhb/VnrzSA+XYSaXsHoDEvoUiOQlbLP5Za2zRHrGvf1cV3JNFU0TfgylqiCCsAjmFBHwgA9Jn/3fSxJmeqN8njZY38TtptDxtA6ETcKpB+2jXOqTFHRTO/Xjcg=='
+            headers={'x-csrftoken': None}
             }
         )
 

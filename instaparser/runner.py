@@ -1,7 +1,7 @@
 from scrapy.crawler import CrawlerProcess
 from scrapy.settings import Settings
 
-from instaparser.spiders.instagram import InstaspiderSpider
+from instaparser.spiders.instaspider import InstaspiderSpider
 from instaparser import settings
 
 if __name__ == '__main__':
