@@ -12,14 +12,15 @@ class InstaspiderSpider(scrapy.Spider):
     name = 'instaspider'
     allowed_domains = ['instagram.com']
     start_urls = ['https://www.instagram.com/']
-    insta_login_link = 'https://www.instagram.com/login/ajax/'
+    insta_login_link = 'https://www.instagram.com/accounts/login/ajax/'
     insta_login = LOGIN
     insta_pass = PASS
     parse_user = 'ai_machine_ learning'
     graphql_url = 'https://www.instagram.com/qraphql/query/?'
     posts_hash = 'eddbde960fed6bde675388aac39a3657'
 
-    def parse(self, response: HtmlResponse):
+    def parse(self, response:HtmlResponse):
+        print()
         csrf = self.fetch_csrf_token(response.text)
         yield scrapy.FormRequest(
             self.insta_login_link,
@@ -27,14 +28,17 @@ class InstaspiderSpider(scrapy.Spider):
             callback=self.auth,
             formdata={
                 'username': self.insta_login,
-                'enc_password': '#PWD_INSTAGRAM_BROWSER:10:1607363859:AXZQAKe4+LkKk5ihE5V9+LJiHaZiyhb/VnrzSA+XYSaXsHoDEvoUiOQlbLP5Za2zRHrGvf1cV3JNFU0TfgylqiCCsAjmFBHwgA9Jn/3fSxJmeqN8njZY38TtptDxtA6ETcKpB+2jXOqTFHRTO/Xjcg==',
+                'enc_password': self.insta_pass
             },
-            headers={'x-csrftoken': csrf}
+            headers={'X-CSRFToken': csrf}
         )
 
-        def auth(self, response: HtmlResponse):
-            print()
 
-        def fetch_csrf_token(self, text):
-            matched = re.search('\"csrf-token\":\"\\w+\"', text).group()
-            return matched.split(':').pop().replace(r'"', '')
+    def auth(self, response: HtmlResponse):
+        print()
+
+
+    def fetch_csrf_token(self, data):
+        matched = re.search('\"csrf_token\":\"\\w+\"', data).group()
+        return matched.split(':').pop().replace(r'"', '')
+
