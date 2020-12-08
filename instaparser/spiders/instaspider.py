@@ -19,7 +19,7 @@ class InstaspiderSpider(scrapy.Spider):
     graphql_url = 'https://www.instagram.com/qraphql/query/?'
     posts_hash = 'eddbde960fed6bde675388aac39a3657'
 
-    def parse(self, response:HtmlResponse):
+    def parse(self, response: HtmlResponse):
         csrf = self.fetch_csrf_token(response.text)
         yield scrapy.FormRequest(
             self.insta_login_link,
@@ -32,21 +32,19 @@ class InstaspiderSpider(scrapy.Spider):
             headers={'X-CSRFToken': csrf}
         )
 
-
     def auth(self, response: HtmlResponse):
         j_data = response.json()
         if j_data.get('authenticated'):
             yield response.follow(
                 f'/{self.parse_user}',
                 callback=self.user_data_parse,
+                cb_kwargs={'username': self.parse_user}
             )
         print()
-
 
     def fetch_csrf_token(self, data):
         matched = re.search('\"csrf_token\":\"\\w+\"', data).group()
         return matched.split(':').pop().replace(r'"', '')
 
-
-    def user_data_parse(self, response:HtmlResponse):
+    def user_data_parse(self, response: HtmlResponse):
         pass
