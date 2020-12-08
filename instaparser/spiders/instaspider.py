@@ -34,6 +34,12 @@ class InstaspiderSpider(scrapy.Spider):
 
 
     def auth(self, response: HtmlResponse):
+        j_data = response.json()
+        if j_data.get('authenticated'):
+            yield response.follow(
+                f'/{self.parse_user}',
+                callback=self.user_data_parse,
+            )
         print()
 
 
@@ -41,3 +47,6 @@ class InstaspiderSpider(scrapy.Spider):
         matched = re.search('\"csrf_token\":\"\\w+\"', data).group()
         return matched.split(':').pop().replace(r'"', '')
 
+
+    def user_data_parse(self, response:HtmlResponse):
+        pass
