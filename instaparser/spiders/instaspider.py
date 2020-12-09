@@ -15,9 +15,11 @@ class InstaspiderSpider(scrapy.Spider):
     insta_login_link = 'https://www.instagram.com/accounts/login/ajax/'
     insta_login = LOGIN
     insta_pass = PASS
-    parse_user = 'ai_machine_ learning'
+    parse_user = 'ai_machine_learning'
     graphql_url = 'https://www.instagram.com/qraphql/query/?'
-    posts_hash = 'eddbde960fed6bde675388aac39a3657'
+    posts_hash = '003056d32c2554def87228bc3fd9668a'
+
+    # posts_hash = 'eddbde960fed6bde675388aac39a3657'
 
     def parse(self, response: HtmlResponse):
         csrf = self.fetch_csrf_token(response.text)
@@ -40,11 +42,15 @@ class InstaspiderSpider(scrapy.Spider):
                 callback=self.user_data_parse,
                 cb_kwargs={'username': self.parse_user}
             )
-        print()
 
     def fetch_csrf_token(self, data):
         matched = re.search('\"csrf_token\":\"\\w+\"', data).group()
         return matched.split(':').pop().replace(r'"', '')
 
-    def user_data_parse(self, response: HtmlResponse):
+    def fetch_user_id(self, text, username):
+        matched = re.search('\"csrf_token\":\"\\w+\"', text).group()
+        return matched.split(':').pop().replace(r'"', '')
+
+    def user_data_parse(self, response: HtmlResponse, username):
+        print()
         pass
