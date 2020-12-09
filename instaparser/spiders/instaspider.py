@@ -52,5 +52,10 @@ class InstaspiderSpider(scrapy.Spider):
         return matched.split(':').pop().replace(r'"', '')
 
     def user_data_parse(self, response: HtmlResponse, username):
-        print()
-        pass
+        user_id = self.fetch_user_id(response.text, username)
+        variables = {
+            'id': user_id,
+            'first': 12,
+        }
+
+        url_posts = f'{self.graphql_url}query_hash={self.query_hash_post}&{urlencode(variables)}'
