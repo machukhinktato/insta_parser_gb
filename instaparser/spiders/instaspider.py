@@ -66,7 +66,7 @@ class InstaspiderSpider(scrapy.Spider):
             cb_kwargs={
                 'username': username,
                 'user_id': user_id,
-                'variables': variables
+                'variables': deepcopy(variables)
             }
         )
 
