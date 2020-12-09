@@ -48,7 +48,7 @@ class InstaspiderSpider(scrapy.Spider):
         return matched.split(':').pop().replace(r'"', '')
 
     def fetch_user_id(self, text, username):
-        matched = re.search('\"csrf_token\":\"\\w+\"', text).group()
+        matched = re.search('\"id\":\"\\d+\",', text).group()
         return matched.split(':').pop().replace(r'"', '')
 
     def user_data_parse(self, response: HtmlResponse, username):
@@ -59,3 +59,18 @@ class InstaspiderSpider(scrapy.Spider):
         }
 
         url_posts = f'{self.graphql_url}query_hash={self.query_hash_post}&{urlencode(variables)}'
+
+        yield response.follow(
+            url_posts,
+            callback=posts_parse,
+            cb_kwargs={
+                'username': username,
+                'user_id': user_id,
+                'variables': variables
+            }
+        )
+
+
+
+    def posts_parse(self, response: HtmlResponse):
+        pass
