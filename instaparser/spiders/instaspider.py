@@ -5,6 +5,7 @@ from scrapy.http import HtmlResponse
 from instaparser.items import InstaparserItem
 from urllib.parse import urlencode
 from copy import deepcopy
+from instaparser.items import InstaparserItem
 from .VARIABLES import *
 
 
@@ -57,6 +58,9 @@ class InstaspiderSpider(scrapy.Spider):
                 'variables': deepcopy(variables)
             }
         )
+
+        posts = page_info = j_data.get('data').get('user').get(
+            'edge_owner_to_timeline_media').get('edges')
 
 
         print()
