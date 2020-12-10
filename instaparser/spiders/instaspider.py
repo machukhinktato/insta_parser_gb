@@ -44,7 +44,7 @@ class InstaspiderSpider(scrapy.Spider):
         page_info = j_data.get('data').get('user').get(
             'edge_owner_to_timeline_media'
         ).get('page_info')
-        if page_info('has_next_page'):
+        if page_info.get('has_next_page'):
             variables['after'] = page_info.get('end_cursor')
 
         url_posts = f'{self.graphql_url}query_hash={self.query_hash_posts}&{urlencode(variables)}'
