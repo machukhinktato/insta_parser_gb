@@ -39,6 +39,26 @@ class InstaspiderSpider(scrapy.Spider):
 
 
     def posts_parse(self, response: HtmlResponse, username, user_id, variables):
+        j_data = response.json()
+        page_info = j_data.get('data').get('user').get(
+            'edge_owner_to_timeline_media'
+        ).get('page_info')
+        if page_info('has_next_page'):
+            variables['after'] = page_info.get('end_cursor')
+
+        url_posts = f'{self.graphql_url}query_hash={self.query_hash_posts}&{urlencode(variables)}'
+
+        yield response.follow(
+            url_posts,
+            callback=self.posts_parse,
+            cb_kwargs={
+                'username': username,
+                'user_id': user_id,
+                'variables': deepcopy(variables)
+            }
+        )
+
+
         print()
         pass
 
