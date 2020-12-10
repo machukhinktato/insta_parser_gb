@@ -69,9 +69,7 @@ class InstaspiderSpider(scrapy.Spider):
                 likes = post['node']['edge_media_preview_like']['count'],
                 post_data = post['node']
             )
-
-        print()
-        pass
+        yield item
 
 
     def auth(self, response: HtmlResponse):
