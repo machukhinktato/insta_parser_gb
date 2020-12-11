@@ -21,7 +21,6 @@ class InstaspiderSpider(scrapy.Spider):
     graphql_url = 'https://www.instagram.com/graphql/query/?'
     query_hash_posts = '003056d32c2554def87228bc3fd9668a'
 
-
     def parse(self, response: HtmlResponse):
         csrf = self.fetch_csrf_token(response.text)
         yield scrapy.FormRequest(
@@ -36,7 +35,6 @@ class InstaspiderSpider(scrapy.Spider):
         )
 
     def auth(self, response: HtmlResponse):
-        print()
         j_data = response.json()
         if j_data.get('authenticated'):
             yield response.follow(
@@ -55,7 +53,6 @@ class InstaspiderSpider(scrapy.Spider):
         return matched.split(':').pop().replace(r'"', '')
 
     def fetch_user_id(self, text, username):
-        print()
         matched = re.search(
             '{\"id\":\"\\d+\",\"username\":\"%s\"}' % username, text
         ).group()
