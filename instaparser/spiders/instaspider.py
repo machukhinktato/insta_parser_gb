@@ -16,14 +16,11 @@ class InstaspiderSpider(scrapy.Spider):
     insta_login_link = 'https://www.instagram.com/accounts/login/ajax/'
     insta_login = LOGIN
     insta_pass = PASS
-    parse_user = 'ai_machine_learning'
+    fst_parse_user = 'ai_machine_learning'
+    scd_parse_user = 'n_delya'
     graphql_url = 'https://www.instagram.com/graphql/query/?'
     query_hash_posts = '003056d32c2554def87228bc3fd9668a'
-    # query_hash_posts = 'd4d88dc1500312af6f937f7b804c68c3'
-    # query_hash_posts = 'd4d88dc1500312af6f937f7b804c68c3'
 
-
-    # posts_hash = 'eddbde960fed6bde675388aac39a3657'
 
     def parse(self, response: HtmlResponse):
         csrf = self.fetch_csrf_token(response.text)
@@ -38,6 +35,51 @@ class InstaspiderSpider(scrapy.Spider):
             headers={'X-CSRFToken': csrf}
         )
 
+    def auth(self, response: HtmlResponse):
+        print()
+        j_data = response.json()
+        if j_data.get('authenticated'):
+            yield response.follow(
+                f'/{self.fst_parse_user}',
+                callback=self.user_data_parse,
+                cb_kwargs={'username': self.fst_parse_user}
+            )
+            yield response.follow(
+                f'/{self.scd_parse_user}',
+                callback=self.user_data_parse,
+                cb_kwargs={'username': self.scd_parse_user}
+            )
+
+    def fetch_csrf_token(self, data):
+        matched = re.search('\"csrf_token\":\"\\w+\"', data).group()
+        return matched.split(':').pop().replace(r'"', '')
+
+    def fetch_user_id(self, text, username):
+        print()
+        matched = re.search(
+            '{\"id\":\"\\d+\",\"username\":\"%s\"}' % username, text
+        ).group()
+        return json.loads(matched).get('id')
+
+    def user_data_parse(self, response: HtmlResponse, username):
+        print()
+        user_id = self.fetch_user_id(response.text, username)
+        variables = {
+            'id': user_id,
+            'first': 12,
+        }
+
+        url_posts = f'{self.graphql_url}query_hash={self.query_hash_posts}&{urlencode(variables)}'
+
+        yield response.follow(
+            url_posts,
+            callback=self.posts_parse,
+            cb_kwargs={
+                'username': username,
+                'user_id': user_id,
+                'variables': deepcopy(variables)
+            }
+        )
 
     def posts_parse(self, response: HtmlResponse, username, user_id, variables):
         j_data = response.json()
@@ -64,53 +106,9 @@ class InstaspiderSpider(scrapy.Spider):
 
         for post in posts:
             item = InstaparserItem(
-                user_id = user_id,
-                photo = post['node']['display_url'],
-                likes = post['node']['edge_media_preview_like']['count'],
-                post_data = post['node']
+                user_id=user_id,
+                photo=post['node']['display_url'],
+                likes=post['node']['edge_media_preview_like']['count'],
+                post_data=post['node']
             )
         yield item
-
-
-    def auth(self, response: HtmlResponse):
-        j_data = response.json()
-        if j_data.get('authenticated'):
-            yield response.follow(
-                f'/{self.parse_user}',
-                callback=self.user_data_parse,
-                cb_kwargs={'username': self.parse_user}
-            )
-
-    def fetch_csrf_token(self, data):
-        matched = re.search('\"csrf_token\":\"\\w+\"', data).group()
-        return matched.split(':').pop().replace(r'"', '')
-
-
-    def fetch_user_id(self, text, username):
-        print()
-        matched = re.search(
-            '{\"id\":\"\\d+\",\"username\":\"%s\"}' % username, text
-        ).group()
-        return json.loads(matched).get('id')
-
-    def user_data_parse(self, response: HtmlResponse, username):
-        user_id = self.fetch_user_id(response.text, username)
-        variables = {
-            'id': user_id,
-            'first': 12,
-        }
-
-        url_posts = f'{self.graphql_url}query_hash={self.query_hash_posts}&{urlencode(variables)}'
-
-        yield response.follow(
-            url_posts,
-            callback=self.posts_parse,
-            cb_kwargs={
-                'username': username,
-                'user_id': user_id,
-                'variables': deepcopy(variables)
-            }
-        )
-
-
-
