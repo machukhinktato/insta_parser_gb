@@ -51,9 +51,9 @@ DOWNLOAD_DELAY = 1.25
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    'instaparser.middlewares.InstaparserDownloaderMiddleware': 543,
-#}
+DOWNLOADER_MIDDLEWARES = {
+   'instaparser.middlewares.InstaparserDownloaderMiddleware': 543,
+}
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
