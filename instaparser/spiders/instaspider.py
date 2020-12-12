@@ -16,7 +16,8 @@ class InstaspiderSpider(scrapy.Spider):
     insta_login_link = 'https://www.instagram.com/accounts/login/ajax/'
     insta_login = LOGIN
     insta_pass = PASS
-    fst_parse_user = 'ai_machine_learning'
+    # fst_parse_user = 'ai_machine_learning'
+    fst_parse_user = 'maxim_spiryakin'
     scd_parse_user = 'n_delya'
     graphql_url = 'https://www.instagram.com/graphql/query/?'
     query_hash_posts = '003056d32c2554def87228bc3fd9668a'
@@ -98,12 +99,13 @@ class InstaspiderSpider(scrapy.Spider):
             }
         )
 
-        posts = page_info = j_data.get('data').get('user').get(
+        posts = j_data.get('data').get('user').get(
             'edge_owner_to_timeline_media').get('edges')
 
         for post in posts:
             item = InstaparserItem(
                 user_id=user_id,
+                username=username,
                 photo=post['node']['display_url'],
                 likes=post['node']['edge_media_preview_like']['count'],
                 post_data=post['node']
