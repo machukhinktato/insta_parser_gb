@@ -101,17 +101,18 @@ class InstaspiderSpider(scrapy.Spider):
                 }
             )
 
+        print()
+
         posts = j_data.get('data').get('user').get(
             'edge_owner_to_timeline_media').get('edges')
 
-        print()
+
 
         for post in posts:
             item = InstaparserItem(
                 user_id=user_id,
                 username=username,
                 photo=post['node']['display_url'],
-                likes=post['node']['edge_media_preview_like']['count'],
-                post_data=post['node']
+                # post_data=post['node']
             )
             yield item
