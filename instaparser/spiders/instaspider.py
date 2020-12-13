@@ -5,6 +5,7 @@ from scrapy.http import HtmlResponse
 from instaparser.items import InstaparserItem
 from urllib.parse import urlencode
 from copy import deepcopy
+from scrapy.loader import ItemLoader
 from instaparser.items import InstaparserItem
 from .VARIABLES import *
 
@@ -103,6 +104,8 @@ class InstaspiderSpider(scrapy.Spider):
         posts = j_data.get('data').get('user').get(
             'edge_owner_to_timeline_media').get('edges')
 
+        print()
+
         for post in posts:
             item = InstaparserItem(
                 user_id=user_id,
@@ -111,4 +114,4 @@ class InstaspiderSpider(scrapy.Spider):
                 likes=post['node']['edge_media_preview_like']['count'],
                 post_data=post['node']
             )
-        yield item
+            yield item
