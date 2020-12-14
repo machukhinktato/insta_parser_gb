@@ -144,8 +144,10 @@ class InstaspiderSpider(scrapy.Spider):
                         'variables': deepcopy(variables)
                     }
                 )
-            posts = j_data.get('data').get('user').get(
-                'edge_owner_to_timeline_media').get('edges')
+                followers = j_data.get('data').get('user').get('edge_followed_by').get('edges')
+
+            for follower in followers:
+                pass
 
         if self.query_hash_following in response.url:
             print()
@@ -155,7 +157,7 @@ class InstaspiderSpider(scrapy.Spider):
             ).get('page_info')
             if page_info.get('has_next_page'):
                 variables['after'] = page_info.get('end_cursor')
-                url_followers = f'{self.graphql_url}query_hash={self.query_hash_following}&{urlencode(variables)}'
+                url_following = f'{self.graphql_url}query_hash={self.query_hash_following}&{urlencode(variables)}'
                 yield response.follow(
                     query_hash_following,
                     callback=self.posts_parse,
@@ -166,9 +168,9 @@ class InstaspiderSpider(scrapy.Spider):
                     }
                 )
 
-            followers = j_data.get('data').get('user').get('edge_followed_by').get('edges')
+            following = j_data.get('data').get('user').get('edge_follow').get('edges')
 
-        for follower in followers:
+        for follow in following:
             pass
 
         for post in posts:
