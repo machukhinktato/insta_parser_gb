@@ -23,7 +23,7 @@ class InstaspiderSpider(scrapy.Spider):
     graphql_url = 'https://www.instagram.com/graphql/query/?'
     query_hash_posts = '003056d32c2554def87228bc3fd9668a'
     query_hash_followers = 'c76146de99bb02f6415203be841dd25a'
-    query_hash_following = ''
+    query_hash_following = 'd04b0a864b4b54837c0d870b0e77e076'
 
     def parse(self, response: HtmlResponse):
         csrf = self.fetch_csrf_token(response.text)
@@ -72,6 +72,7 @@ class InstaspiderSpider(scrapy.Spider):
 
         url_posts = f'{self.graphql_url}query_hash={self.query_hash_posts}&{urlencode(variables)}'
         url_followers = f'{self.graphql_url}query_hash={self.query_hash_followers}&{urlencode(variables)}'
+        url_following = f'{self.graphql_url}query_hash={self.query_hash_following}&{urlencode(variables)}'
 
         yield response.follow(
             url_posts,
