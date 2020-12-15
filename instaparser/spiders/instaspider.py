@@ -113,9 +113,7 @@ class InstaspiderSpider(scrapy.Spider):
             ).get('page_info')
             if page_info.get('has_next_page'):
                 variables['after'] = page_info.get('end_cursor')
-
                 url_posts = f'{self.graphql_url}query_hash={self.query_hash_posts}&{urlencode(variables)}'
-
                 yield response.follow(
                     url_posts,
                     callback=self.posts_parse,
@@ -158,7 +156,7 @@ class InstaspiderSpider(scrapy.Spider):
                 variables['after'] = page_info.get('end_cursor')
                 url_following = f'{self.graphql_url}query_hash={self.query_hash_following}&{urlencode(variables)}'
                 yield response.follow(
-                    query_hash_following,
+                    url_following,
                     callback=self.posts_parse,
                     cb_kwargs={
                         'username': username,
@@ -169,7 +167,7 @@ class InstaspiderSpider(scrapy.Spider):
 
             followers = j_data.get('data').get('user').get('edge_follow').get('edges')
 
-
+        print()
         if posts:
             for post in posts:
                 item = InstaparserItem(
