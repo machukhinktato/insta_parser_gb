@@ -145,16 +145,14 @@ class InstaspiderSpider(scrapy.Spider):
                         'variables': deepcopy(variables)
                     }
                 )
-                followers = j_data.get('data').get('user').get('edge_followed_by').get('edges')
+            followers = j_data.get('data').get('user').get('edge_followed_by').get('edges')
 
-            for follower in followers:
-                pass
 
         if self.query_hash_following in response.url:
             print()
             j_data = response.json()
             page_info = j_data.get('data').get('user').get(
-                'edge_followed_by'
+                'edge_follow'
             ).get('page_info')
             if page_info.get('has_next_page'):
                 variables['after'] = page_info.get('end_cursor')
@@ -169,16 +167,35 @@ class InstaspiderSpider(scrapy.Spider):
                     }
                 )
 
-            following = j_data.get('data').get('user').get('edge_follow').get('edges')
+            followers = j_data.get('data').get('user').get('edge_follow').get('edges')
 
+
+        if posts:
+            for post in posts:
+                item = InstaparserItem(
+                    user_id=user_id,
+                    username=username,
+                    photo=post['node']['display_url'],
+                    # post_data=post['node']
+                )
+                yield item
+
+        if followers:
+            for follower in followers:
+                item = InstaparserItem(
+                    user_id=user_id,
+                    username=username,
+                    photo=post['node']['display_url'],
+                    # post_data=post['node']
+                )
+                yield item
+
+        if following:
             for follow in following:
-                pass
-
-        for post in posts:
-            item = InstaparserItem(
-                user_id=user_id,
-                username=username,
-                photo=post['node']['display_url'],
-                # post_data=post['node']
-            )
-            yield item
+                item = InstaparserItem(
+                    user_id=user_id,
+                    username=username,
+                    photo=post['node']['display_url'],
+                    # post_data=post['node']
+                )
+                yield item
