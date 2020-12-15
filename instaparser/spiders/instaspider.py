@@ -165,35 +165,35 @@ class InstaspiderSpider(scrapy.Spider):
                     }
                 )
 
-            followers = j_data.get('data').get('user').get('edge_follow').get('edges')
+            following = j_data.get('data').get('user').get('edge_follow').get('edges')
 
         print()
-        if posts:
+        if self.query_hash_posts in response.url:
             for post in posts:
                 item = InstaparserItem(
                     user_id=user_id,
                     username=username,
                     photo=post['node']['display_url'],
-                    # post_data=post['node']
+                    data='user'
                 )
                 yield item
 
-        if followers:
+        if self.query_hash_followers in response.url:
             for follower in followers:
                 item = InstaparserItem(
-                    user_id=user_id,
-                    username=username,
-                    photo=post['node']['display_url'],
-                    # post_data=post['node']
+                    user_id=follower['node']['id'],
+                    username=follower['node']['username'],
+                    photo=follower['node']['profile_pic_url'],
+                    data='follower'
                 )
                 yield item
-
-        if following:
+        print()
+        if self.query_hash_following in response.url:
             for follow in following:
                 item = InstaparserItem(
-                    user_id=user_id,
-                    username=username,
-                    photo=post['node']['display_url'],
-                    # post_data=post['node']
+                    user_id=follow['node']['id'],
+                    username=follow['node']['username'],
+                    photo=follow['node']['profile_pic_url'],
+                    data='follow'
                 )
                 yield item
