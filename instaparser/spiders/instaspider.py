@@ -125,6 +125,7 @@ class InstaspiderSpider(scrapy.Spider):
                         'variables': deepcopy(variables)
                     }
                 )
+            posts = j_data.get('data').get('user').get('edge_owner_to_timeline_media').get('edges')
 
         if self.query_hash_followers in response.url:
             print()
@@ -170,8 +171,8 @@ class InstaspiderSpider(scrapy.Spider):
 
             following = j_data.get('data').get('user').get('edge_follow').get('edges')
 
-        for follow in following:
-            pass
+            for follow in following:
+                pass
 
         for post in posts:
             item = InstaparserItem(
