@@ -5,9 +5,12 @@
 
 
 # useful for handling different item types with a single interface
+import scrapy
+import os
+
 from itemadapter import ItemAdapter
 from pymongo import MongoClient
-
+from scrapy.pipelines.images import ImagesPipeline
 
 class InstaparserPipeline:
 
@@ -18,4 +21,16 @@ class InstaparserPipeline:
 
     def process_item(self, item, spider):
         print()
+        return item
+
+
+class InstaPhotoPipline(ImagesPipeline):
+    def get_media_requests(self, item, info):
+        if item['photo']:
+            for img in item['photo']:
+                try:
+                    yield scrapy.Request(img)
+                except Exception as e:
+                    print(e)
+
         return item
