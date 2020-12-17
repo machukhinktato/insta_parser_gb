@@ -192,15 +192,15 @@ class InstaspiderSpider(scrapy.Spider):
         # print()
 
 
-        if self.query_hash_following in response.url:
-            for follow in following:
-                item = InstaparserItem(
-                    user_id=follow['node']['id'],
-                    username=follow['node']['username'],
-                    photo=follow['node']['profile_pic_url'],
-                    data='follow'
-                )
-                yield item
+        # if self.query_hash_following in response.url:
+        #     for follow in following:
+        #         item = InstaparserItem(
+        #             user_id=follow['node']['id'],
+        #             username=follow['node']['username'],
+        #             photo=follow['node']['profile_pic_url'],
+        #             data='follow'
+        #         )
+        #         yield item
 
 
         if self.query_hash_posts in response.url:
@@ -219,5 +219,15 @@ class InstaspiderSpider(scrapy.Spider):
                 loader.add_value('username', follower['node']['username'])
                 loader.add_value('photo', follower['node']['profile_pic_url'])
                 loader.add_value('data','follower')
+                print()
+                yield loader.load_item()
+
+
+        if self.query_hash_following in response.url:
+            for follow in following:
+                loader.add_value('user_id', follow['node']['id'])
+                loader.add_value('username', follow['node']['username'])
+                loader.add_value('photo', follow['node']['profile_pic_url'])
+                loader.add_value('data','follow')
                 print()
                 yield loader.load_item()
