@@ -34,3 +34,10 @@ class InstaPhotoPipline(ImagesPipeline):
                     print(e)
 
         return item
+
+    def item_completed(self, results, item, info):
+        print()
+        if results:
+            item['photo'] = [itm[1] for itm in results if itm[0]]
+
+        return item
