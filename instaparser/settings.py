@@ -20,6 +20,8 @@ ROBOTSTXT_OBEY = False
 LOG_ENABLED = True
 LOG_LEVEL = 'DEBUG'
 
+IMAGES_STORE = 'images'
+
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
 
