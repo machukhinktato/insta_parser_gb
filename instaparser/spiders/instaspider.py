@@ -167,6 +167,8 @@ class InstaspiderSpider(scrapy.Spider):
 
             following = j_data.get('data').get('user').get('edge_follow').get('edges')
 
+        loader = ItemLoader(item=InstaparserItem(), response=response)
+
         print()
         if self.query_hash_posts in response.url:
             for post in posts:
@@ -197,3 +199,5 @@ class InstaspiderSpider(scrapy.Spider):
                     data='follow'
                 )
                 yield item
+
+

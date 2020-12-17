@@ -11,9 +11,9 @@ from pymongo import MongoClient
 
 class InstaparserPipeline:
 
-    def __init__(self):
-        db = MongoClient('localhost', 27017)
-        self.db = db.instagram_user_parse
+    # def __init__(self):
+    #     db = MongoClient('localhost', 27017)
+    #     self.db = db.instagram_user_parse
 
 
     def process_item(self, item, spider):
