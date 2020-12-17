@@ -170,26 +170,28 @@ class InstaspiderSpider(scrapy.Spider):
         loader = ItemLoader(item=InstaparserItem(), response=response)
 
         print()
-        if self.query_hash_posts in response.url:
-            for post in posts:
-                item = InstaparserItem(
-                    user_id=user_id,
-                    username=username,
-                    photo=post['node']['display_url'],
-                    data='user'
-                )
-                yield item
+        # if self.query_hash_posts in response.url:
+        #     for post in posts:
+        #         item = InstaparserItem(
+        #             user_id=user_id,
+        #             username=username,
+        #             photo=post['node']['display_url'],
+        #             data='user'
+        #         )
+        #         yield item
 
-        if self.query_hash_followers in response.url:
-            for follower in followers:
-                item = InstaparserItem(
-                    user_id=follower['node']['id'],
-                    username=follower['node']['username'],
-                    photo=follower['node']['profile_pic_url'],
-                    data='follower'
-                )
-                yield item
-        print()
+        # if self.query_hash_followers in response.url:
+        #     for follower in followers:
+        #         item = InstaparserItem(
+        #             user_id=follower['node']['id'],
+        #             username=follower['node']['username'],
+        #             photo=follower['node']['profile_pic_url'],
+        #             data='follower'
+        #         )
+        #         yield item
+        # print()
+
+
         if self.query_hash_following in response.url:
             for follow in following:
                 item = InstaparserItem(
@@ -201,3 +203,21 @@ class InstaspiderSpider(scrapy.Spider):
                 yield item
 
 
+        if self.query_hash_posts in response.url:
+            for post in posts:
+                loader.add_value('user_id', user_id)
+                loader.add_value('username', username)
+                loader.add_value('photo', post['node']['display_url'])
+                loader.add_value('data','user')
+                print()
+                yield loader.load_item()
+
+
+        if self.query_hash_followers in response.url:
+            for follower in followers:
+                loader.add_value('user_id', follower['node']['id'])
+                loader.add_value('username', follower['node']['username'])
+                loader.add_value('photo', follower['node']['profile_pic_url'])
+                loader.add_value('data','follower')
+                print()
+                yield loader.load_item()
