@@ -11,13 +11,14 @@ import os
 from itemadapter import ItemAdapter
 from pymongo import MongoClient
 from scrapy.pipelines.images import ImagesPipeline
+from urllib.parse import urlparse
+
 
 class InstaparserPipeline:
 
     # def __init__(self):
     #     db = MongoClient('localhost', 27017)
     #     self.db = db.instagram_user_parse
-
 
     def process_item(self, item, spider):
         print()
@@ -41,3 +42,6 @@ class InstaPhotoPipline(ImagesPipeline):
             item['photo'] = [itm[1] for itm in results if itm[0]]
 
         return item
+
+    def file_path(self, request, response=None, info=None, *, item=None):
+        return str((item['name'])) + '/' + os.path.basename(urlparse(request.url).path)
