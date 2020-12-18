@@ -16,9 +16,9 @@ from urllib.parse import urlparse
 
 class InstaparserPipeline:
 
-    # def __init__(self):
-    #     db = MongoClient('localhost', 27017)
-    #     self.db = db.instagram_user_parse
+    def __init__(self):
+        db = MongoClient('localhost', 27017)
+        self.db = db.instagram_user_parse
 
     def process_item(self, item, spider):
         print()
@@ -30,11 +30,13 @@ class InstaPhotoPipline(ImagesPipeline):
     def get_media_requests(self, item, info):
         print()
         if item['photo']:
-            # for img in item['photo']:
-            #     try:
-            yield scrapy.Request(str(item['photo'][0]))
-                # except Exception as e:
-                #     print(e)
+            for img in item['photo']:
+                print()
+                try:
+                    # yield scrapy.Request(str(item['photo'][0]))
+                    yield scrapy.Request(img)
+                except Exception as e:
+                    print(e)
 
         return item
 
