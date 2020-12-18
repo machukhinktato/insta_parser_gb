@@ -45,5 +45,5 @@ class InstaPhotoPipline(ImagesPipeline):
 
         return item
 
-    # def file_path(self, request, response=None, info=None, *, item=None):
-    #     return str((item['name'])) + '/' + os.path.basename(urlparse(request.url).path)
+    def file_path(self, request, response=None, info=None, *, item=None):
+        return str(item['username'][0]) + '/' + os.path.basename(urlparse(request.url).path)
