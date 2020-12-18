@@ -26,13 +26,15 @@ class InstaparserPipeline:
 
 
 class InstaPhotoPipline(ImagesPipeline):
+    print()
     def get_media_requests(self, item, info):
+        print()
         if item['photo']:
-            for img in item['photo']:
-                try:
-                    yield scrapy.Request(img)
-                except Exception as e:
-                    print(e)
+            # for img in item['photo']:
+            #     try:
+            yield scrapy.Request(str(item['photo'][0]))
+                # except Exception as e:
+                #     print(e)
 
         return item
 
@@ -43,5 +45,5 @@ class InstaPhotoPipline(ImagesPipeline):
 
         return item
 
-    def file_path(self, request, response=None, info=None, *, item=None):
-        return str((item['name'])) + '/' + os.path.basename(urlparse(request.url).path)
+    # def file_path(self, request, response=None, info=None, *, item=None):
+    #     return str((item['name'])) + '/' + os.path.basename(urlparse(request.url).path)
