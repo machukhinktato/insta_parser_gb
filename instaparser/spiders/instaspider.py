@@ -204,12 +204,12 @@ class InstaspiderSpider(scrapy.Spider):
 
         if self.query_hash_posts in response.url:
             for post in posts:
-
+                print()
                 loader.add_value('user_id', user_id)
                 loader.add_value('username', username)
                 loader.add_value('photo', post['node']['display_url'])
                 loader.add_value('data','user')
-                loader.add_value('url', InstaspiderSpider.start_urls[0] + post['username'])
+                loader.add_value('url', self.start_urls[0] + 'p/' + post['node']['shortcode'])
                 print()
                 yield loader.load_item()
 
@@ -220,7 +220,7 @@ class InstaspiderSpider(scrapy.Spider):
                 loader.add_value('username', follower['node']['username'])
                 loader.add_value('photo', follower['node']['profile_pic_url'])
                 loader.add_value('data','follower')
-                loader.add_value('url', InstaspiderSpider.start_urls[0] + follower['username'])
+                loader.add_value('url', self.start_urls[0] + follower['node']['username'])
                 print()
                 yield loader.load_item()
 
@@ -231,6 +231,6 @@ class InstaspiderSpider(scrapy.Spider):
                 loader.add_value('username', follow['node']['username'])
                 loader.add_value('photo', follow['node']['profile_pic_url'])
                 loader.add_value('data','follow')
-                loader.add_value('url', InstaspiderSpider.start_urls[0] + follow['username'])
+                loader.add_value('url', self.start_urls[0] + follow['node']['username'])
                 print()
                 yield loader.load_item()
