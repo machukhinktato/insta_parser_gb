@@ -66,7 +66,7 @@ class InstaspiderSpider(scrapy.Spider):
         user_id = self.fetch_user_id(response.text, username)
         variables = {
             'id': user_id,
-            'first': 12,
+            'first': 1,
         }
 
         url_posts = f'{self.graphql_url}query_hash={self.query_hash_posts}&{urlencode(variables)}'
