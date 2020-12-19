@@ -18,15 +18,22 @@ class InstaparserPipeline:
 
     def __init__(self):
         db = MongoClient('localhost', 27017)
-        self.db = db.instagram_user_parse
+        self.db = db.instagram_parsing
 
     def process_item(self, item, spider):
-        print()
+        collection = self.db[spider.name]
+        try:
+            item['_id'] = collection.count_documents({}) + 1
+        except:
+            item['_id'] = 0
+        collection.insert_one(item)
+
         return item
 
 
 class InstaPhotoPipline(ImagesPipeline):
     print()
+
     def get_media_requests(self, item, info):
         print()
         if item['photo']:
