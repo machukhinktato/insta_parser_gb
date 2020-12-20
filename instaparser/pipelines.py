@@ -32,15 +32,12 @@ class InstaparserPipeline:
 
 
 class InstaPhotoPipline(ImagesPipeline):
-    print()
-
     def get_media_requests(self, item, info):
         print()
         if item['photo']:
             for img in item['photo']:
                 print()
                 try:
-                    # yield scrapy.Request(str(item['photo'][0]))
                     yield scrapy.Request(img)
                 except Exception as e:
                     print(e)
@@ -48,7 +45,6 @@ class InstaPhotoPipline(ImagesPipeline):
         return item
 
     def item_completed(self, results, item, info):
-        print()
         if results:
             item['photo'] = [itm[1] for itm in results if itm[0]]
 

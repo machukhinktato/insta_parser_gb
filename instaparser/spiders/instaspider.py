@@ -68,7 +68,7 @@ class InstaspiderSpider(scrapy.Spider):
         user_id = self.fetch_user_id(response.text, username)
         variables = {
             'id': user_id,
-            'first': 1 ,
+            'first': 1,
         }
 
         url_posts = f'{self.graphql_url}query_hash={self.query_hash_posts}&{urlencode(variables)}'
@@ -127,7 +127,6 @@ class InstaspiderSpider(scrapy.Spider):
             posts = j_data.get('data').get('user').get('edge_owner_to_timeline_media').get('edges')
 
         if self.query_hash_followers in response.url:
-            print()
             j_data = response.json()
             page_info = j_data.get('data').get('user').get(
                 'edge_followed_by'
@@ -147,7 +146,6 @@ class InstaspiderSpider(scrapy.Spider):
             followers = j_data.get('data').get('user').get('edge_followed_by').get('edges')
 
         if self.query_hash_following in response.url:
-            print()
             j_data = response.json()
             page_info = j_data.get('data').get('user').get(
                 'edge_follow'
@@ -176,17 +174,14 @@ class InstaspiderSpider(scrapy.Spider):
                 loader.add_value('photo', post['node']['display_url'])
                 loader.add_value('data', 'user')
                 loader.add_value('url', self.start_urls[0] + 'p/' + post['node']['shortcode'])
-                # yield loader.load_item()
 
         if self.query_hash_followers in response.url:
             for follower in followers:
-                print()
                 loader.add_value('user_id', follower['node']['id'])
                 loader.add_value('username', follower['node']['username'])
                 loader.add_value('photo', follower['node']['profile_pic_url'])
                 loader.add_value('data', username + ' follower')
                 loader.add_value('url', self.start_urls[0] + follower['node']['username'])
-                # yield loader.load_item()
 
         if self.query_hash_following in response.url:
             for follow in following:
@@ -195,6 +190,5 @@ class InstaspiderSpider(scrapy.Spider):
                 loader.add_value('photo', follow['node']['profile_pic_url'])
                 loader.add_value('data', username + ' follow')
                 loader.add_value('url', self.start_urls[0] + follow['node']['username'])
-                # yield loader.load_item()
 
         yield loader.load_item()
