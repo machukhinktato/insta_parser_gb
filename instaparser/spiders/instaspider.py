@@ -17,8 +17,10 @@ class InstaspiderSpider(scrapy.Spider):
     insta_login_link = 'https://www.instagram.com/accounts/login/ajax/'
     insta_login = LOGIN
     insta_pass = PASS
-    fst_parse_user = 'maxim_spiryakin'
-    scd_parse_user = 'n_delya'
+    # fst_parse_user = 'maxim_spiryakin'
+    # scd_parse_user = 'n_delya'
+    scd_parse_user = 'kostya_vladyka'
+    fst_parse_user = 'lyubovladyko'
     graphql_url = 'https://www.instagram.com/graphql/query/?'
     query_hash_posts = '003056d32c2554def87228bc3fd9668a'
     query_hash_followers = 'c76146de99bb02f6415203be841dd25a'
@@ -66,7 +68,7 @@ class InstaspiderSpider(scrapy.Spider):
         user_id = self.fetch_user_id(response.text, username)
         variables = {
             'id': user_id,
-            'first': 1,
+            'first': 1 ,
         }
 
         url_posts = f'{self.graphql_url}query_hash={self.query_hash_posts}&{urlencode(variables)}'
@@ -174,22 +176,25 @@ class InstaspiderSpider(scrapy.Spider):
                 loader.add_value('photo', post['node']['display_url'])
                 loader.add_value('data', 'user')
                 loader.add_value('url', self.start_urls[0] + 'p/' + post['node']['shortcode'])
-                yield loader.load_item()
+                # yield loader.load_item()
 
         if self.query_hash_followers in response.url:
             for follower in followers:
+                print()
                 loader.add_value('user_id', follower['node']['id'])
                 loader.add_value('username', follower['node']['username'])
                 loader.add_value('photo', follower['node']['profile_pic_url'])
-                loader.add_value('data', 'follower')
+                loader.add_value('data', username + ' follower')
                 loader.add_value('url', self.start_urls[0] + follower['node']['username'])
-                yield loader.load_item()
+                # yield loader.load_item()
 
         if self.query_hash_following in response.url:
             for follow in following:
                 loader.add_value('user_id', follow['node']['id'])
                 loader.add_value('username', follow['node']['username'])
                 loader.add_value('photo', follow['node']['profile_pic_url'])
-                loader.add_value('data', 'follow')
+                loader.add_value('data', username + ' follow')
                 loader.add_value('url', self.start_urls[0] + follow['node']['username'])
-                yield loader.load_item()
+                # yield loader.load_item()
+
+        yield loader.load_item()
