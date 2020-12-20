@@ -17,10 +17,8 @@ class InstaspiderSpider(scrapy.Spider):
     insta_login_link = 'https://www.instagram.com/accounts/login/ajax/'
     insta_login = LOGIN
     insta_pass = PASS
-    # fst_parse_user = 'maxim_spiryakin'
-    # scd_parse_user = 'n_delya'
-    scd_parse_user = 'kostya_vladyka'
-    fst_parse_user = 'lyubovladyko'
+    scd_parse_user = USER_1
+    fst_parse_user = USER_2
     graphql_url = 'https://www.instagram.com/graphql/query/?'
     query_hash_posts = '003056d32c2554def87228bc3fd9668a'
     query_hash_followers = 'c76146de99bb02f6415203be841dd25a'
@@ -64,7 +62,6 @@ class InstaspiderSpider(scrapy.Spider):
         return json.loads(matched).get('id')
 
     def user_data_parse(self, response: HtmlResponse, username):
-        print()
         user_id = self.fetch_user_id(response.text, username)
         variables = {
             'id': user_id,
@@ -106,7 +103,6 @@ class InstaspiderSpider(scrapy.Spider):
         )
 
     def posts_parse(self, response: HtmlResponse, username, user_id, variables):
-        print()
         if self.query_hash_posts in response.url:
             j_data = response.json()
             page_info = j_data.get('data').get('user').get(
