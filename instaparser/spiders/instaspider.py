@@ -15,10 +15,10 @@ class InstaspiderSpider(scrapy.Spider):
     allowed_domains = ['instagram.com']
     start_urls = ['https://www.instagram.com/']
     insta_login_link = 'https://www.instagram.com/accounts/login/ajax/'
-    insta_login = LOGIN
-    insta_pass = PASS
-    scd_parse_user = USER_1
-    fst_parse_user = USER_2
+    insta_login = LOGIN # задаётся отдельно
+    insta_pass = PASS # задаётся отдельно
+    scd_parse_user = USER_1 # задаётся отдельно
+    fst_parse_user = USER_2 # задаётся отдельно
     graphql_url = 'https://www.instagram.com/graphql/query/?'
     query_hash_posts = '003056d32c2554def87228bc3fd9668a'
     query_hash_followers = 'c76146de99bb02f6415203be841dd25a'
